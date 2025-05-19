@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Explore Destinations - EcoTourism{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Explore Amazing Destinations</h1>
+        <p class="lead text-muted">Discover breathtaking locations and unforgettable experiences</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-light p-4 rounded-lg mb-5">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="region" class="form-label">Region</label>
+                <select name="region" id="region" class="form-select">
+                    <option value="">All Regions</option>
+                    {% for region in regions %}
+                    <option value="{{ region.id }}" {% if selected_region == region.id %}selected{% endif %}>
+                        {{ region.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="search" class="form-label">Search</label>
+                <input type="text" name="search" id="search" class="form-control" placeholder="Search destinations...">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Featured Destinations -->
+    {% if featured %}
+    <section class="mb-5">
+        <h2 class="h3 mb-4">Featured Destinations</h2>
+        <div class="row">
+            {% for destination in featured %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <img src="{{ destination.featured_image.url }}" class="card-img-top" alt="{{ destination.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ destination.name }}</h5>
+                        <p class="card-text text-muted mb-2">{{ destination.location }}</p>
+                        <p class="card-text">{{ destination.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="{% url 'destination_detail' destination.slug %}" class="btn btn-outline-primary">
+                            Explore More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- All Destinations -->
+    <section>
+        <h2 class="h3 mb-4">All Destinations</h2>
+        <div class="row">
+            {% for destination in destinations %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <img src="{{ destination.featured_image.url }}" class="card-img-top" alt="{{ destination.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ destination.name }}</h5>
+                        <p class="card-text text-muted mb-2">{{ destination.location }}</p>
+                        <p class="card-text">{{ destination.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="{% url 'destination_detail' destination.slug %}" class="btn btn-outline-primary">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No destinations found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hover-card {
+        transition: transform 0.3s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
